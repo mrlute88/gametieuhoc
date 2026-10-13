@@ -1,0 +1,223 @@
+:root {
+  --font-display: 'Baloo 2', cursive, sans-serif;
+  --font-body: 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Bảng màu rực rỡ, tươi vui chuẩn sư phạm trẻ em */
+  --primary-500: #6366f1;
+  --primary-600: #4f46e5;
+  --primary-700: #4338ca;
+  --accent-amber: #f59e0b;
+  --accent-emerald: #10b981;
+  --accent-rose: #f43f5e;
+  --accent-cyan: #06b6d4;
+
+  --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f0fdf4 50%, #fef3c7 100%);
+  --card-glass: rgba(255, 255, 255, 0.88);
+  --card-border: rgba(255, 255, 255, 0.95);
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
+  --shadow-md: 0 10px 20px -3px rgba(99, 102, 241, 0.15);
+  --shadow-lg: 0 20px 30px -8px rgba(79, 70, 229, 0.25);
+  --shadow-bouncy: 0 8px 0 rgba(79, 70, 229, 0.3);
+
+  --radius-sm: 0.75rem;
+  --radius-md: 1.25rem;
+  --radius-lg: 2rem;
+  --radius-full: 9999px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-gradient);
+  color: #1e293b;
+  min-height: 100vh;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}
+
+/* Nút bấm kiểu Arcade 3D nổi bật cho trẻ nhỏ */
+.btn-arcade {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  outline: none;
+}
+
+.btn-arcade-primary {
+  background: linear-gradient(180deg, #818cf8 0%, #4f46e5 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 0 #3730a3, 0 12px 18px rgba(79, 70, 229, 0.35);
+}
+
+.btn-arcade-primary:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 #3730a3, 0 4px 8px rgba(79, 70, 229, 0.25);
+}
+
+.btn-arcade-amber {
+  background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+  color: #78350f;
+  box-shadow: 0 6px 0 #b45309, 0 10px 16px rgba(245, 158, 11, 0.35);
+}
+
+.btn-arcade-amber:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 #b45309, 0 4px 6px rgba(245, 158, 11, 0.25);
+}
+
+.btn-arcade-emerald {
+  background: linear-gradient(180deg, #34d399 0%, #10b981 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 0 #047857, 0 10px 16px rgba(16, 185, 129, 0.35);
+}
+
+.btn-arcade-emerald:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 #047857, 0 4px 6px rgba(16, 185, 129, 0.25);
+}
+
+.btn-arcade-rose {
+  background: linear-gradient(180deg, #fb7185 0%, #f43f5e 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 0 #be123c, 0 10px 16px rgba(244, 63, 94, 0.35);
+}
+
+.btn-arcade-rose:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 #be123c, 0 4px 6px rgba(244, 63, 94, 0.25);
+}
+
+/* Thẻ Glassmorphism */
+.glass-card {
+  background: var(--card-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 2px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+/* Hiệu ứng nhấp nháy phát sáng (Pulse Glow) */
+@keyframes softPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.4));
+  }
+  50% {
+    transform: scale(1.04);
+    filter: drop-shadow(0 0 18px rgba(99, 102, 241, 0.7));
+  }
+}
+
+.animate-pulse-glow {
+  animation: softPulse 2.4s infinite ease-in-out;
+}
+
+/* Hiệu ứng nổi bồng bềnh (Float) */
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: gentleFloat 3s infinite ease-in-out;
+}
+
+/* Tùy chỉnh thanh cuộn đẹp mắt */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(224, 231, 255, 0.5);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb {
+  background: #a5b4fc;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #818cf8;
+}
+
+/* Lựa chọn đáp án trắc nghiệm lớn, phản hồi trực quan */
+.option-card {
+  background: #ffffff;
+  border: 3px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 0 #cbd5e1;
+  min-height: 64px;
+}
+
+.option-card:hover {
+  border-color: #6366f1;
+  background: #f5f3ff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #818cf8;
+}
+
+.option-card:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #818cf8;
+}
+
+.option-card.correct {
+  background: #ecfdf5 !important;
+  border-color: #10b981 !important;
+  color: #065f46 !important;
+  box-shadow: 0 4px 0 #059669 !important;
+  animation: correctBounce 0.4s ease;
+}
+
+.option-card.wrong {
+  background: #fff1f2 !important;
+  border-color: #f43f5e !important;
+  color: #9f1239 !important;
+  box-shadow: 0 4px 0 #e11d48 !important;
+  animation: shake 0.4s ease;
+}
+
+@keyframes correctBounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
