@@ -23,7 +23,21 @@ export default function QuizBattleView({
   // Tham chiếu tới Phaser BattleScene
   const battleSceneRef = useRef(null);
 
+  // Hàm xáo trộn ngẫu nhiên để phân bố vị trí đáp án linh hoạt
+  const shuffleOptions = (options) => {
+    if (!options || !Array.isArray(options)) return [];
+    const arr = [...options];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  };
+
   const currentLesson = lessons[currentIndex] || lessons[0];
+
+  // Phân bố đáp án linh hoạt: xáo trộn các lựa chọn cho mỗi câu hỏi, không cố định một vị trí
+  const [displayOptions, setDisplayOptions] = useState(() => shuffleOptions(currentLesson?.options));
 
   useEffect(() => {
     setCurrentIndex(stageIndex);
@@ -32,7 +46,9 @@ export default function QuizBattleView({
     setShowHint(false);
     setAttemptCount(0);
     setIsFinished(false);
-  }, [stageIndex]);
+    const currentLessons = LESSONS[subject.id] || [];
+    setDisplayOptions(shuffleOptions(currentLessons[stageIndex]?.options));
+  }, [stageIndex, subject.id]);
 
   const handleSceneReady = (scene) => {
     battleSceneRef.current = scene;
@@ -90,11 +106,13 @@ export default function QuizBattleView({
   const handleNextQuestion = () => {
     soundManager.playClick();
     if (currentIndex + 1 < lessons.length) {
-      setCurrentIndex(prev => prev + 1);
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
       setSelectedOption(null);
       setIsCorrect(null);
       setShowHint(false);
       setAttemptCount(0);
+      setDisplayOptions(shuffleOptions(lessons[nextIndex]?.options));
     } else {
       setIsFinished(true);
       soundManager.playSuccess();
@@ -377,7 +395,7 @@ export default function QuizBattleView({
             gap: '0.85rem',
             marginBottom: '1.25rem'
           }}>
-            {currentLesson.options.map((option, idx) => {
+            {displayOptions.map((option, idx) => {
               let statusClass = '';
               if (selectedOption === option) {
                 statusClass = isCorrect ? 'correct' : 'wrong';
@@ -387,7 +405,7 @@ export default function QuizBattleView({
 
               return (
                 <button
-                  key={idx}
+                  key={`${currentLesson.id}-${idx}-${option}`}
                   id={`opt-${idx}`}
                   onClick={() => handleSelectOption(option)}
                   className={`option-card ${statusClass}`}
