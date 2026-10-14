@@ -9,6 +9,7 @@ import PetSanctuary from './components/PetSanctuary';
 import ParentModal from './components/ParentModal';
 import EvolutionExamModal from './components/EvolutionExamModal';
 import EvolutionCutsceneModal from './components/EvolutionCutsceneModal';
+import ScreenTimeLockModal from './components/ScreenTimeLockModal';
 import { PETS, PET_ITEMS, getPetWithEvolution } from './data/curriculumData';
 import { soundManager } from './utils/audio';
 
@@ -83,7 +84,12 @@ export default function App() {
 
   const equippedItem = PET_ITEMS.find(i => i.id === equippedItemId) || null;
 
-  // 4. Các ải đã hoàn thành
+  // 4. Mật khẩu Phụ Huynh & Giáo Viên (Mặc định: 'admin')
+  const [parentPassword, setParentPassword] = useState(() => {
+    return localStorage.getItem('gametieuhoc_parent_password') || 'admin';
+  });
+
+  // 5. Các ải đã hoàn thành
   const [completedLessonIds, setCompletedLessonIds] = useState(() => {
     try {
       const s = localStorage.getItem('gametieuhoc_completed_lessons');
@@ -93,7 +99,7 @@ export default function App() {
     }
   });
 
-  // 5. Đồng bộ LocalStorage liên tục
+  // 6. Đồng bộ LocalStorage liên tục
   useEffect(() => { localStorage.setItem('gametieuhoc_base_pet_id', basePet.id); }, [basePet]);
   useEffect(() => { localStorage.setItem('gametieuhoc_pet_tiers', JSON.stringify(petTiers)); }, [petTiers]);
   useEffect(() => { localStorage.setItem('gametieuhoc_coins', coins); }, [coins]);
@@ -105,6 +111,7 @@ export default function App() {
   useEffect(() => { localStorage.setItem('gametieuhoc_owned_items', JSON.stringify(ownedItemIds)); }, [ownedItemIds]);
   useEffect(() => { localStorage.setItem('gametieuhoc_equipped_item', equippedItemId); }, [equippedItemId]);
   useEffect(() => { localStorage.setItem('gametieuhoc_pet_energy', petEnergy); }, [petEnergy]);
+  useEffect(() => { localStorage.setItem('gametieuhoc_parent_password', parentPassword); }, [parentPassword]);
 
   // 6. Điều hướng màn hình: 'map' | 'stages' | 'quiz'
   const [currentView, setCurrentView] = useState('map');
@@ -399,6 +406,9 @@ export default function App() {
           stats={stats}
           screenTimeLimit={screenTimeLimit}
           setScreenTimeLimit={setScreenTimeLimit}
+          parentPassword={parentPassword}
+          onUpdatePassword={setParentPassword}
+          onTriggerTimeLock={() => setIsTimeLocked(true)}
           onSetLevel={handleSetLevelFast}
           onAddCoins={(c) => setCoins((prev) => prev + c)}
           onTriggerEvolutionCutscene={handleTriggerDemoCutscene}
@@ -436,44 +446,21 @@ export default function App() {
         />
       )}
 
-      {/* 8. Khóa Nghỉ Ngơi Bảo Vệ Mắt */}
+      {/* 8. Khóa Nghỉ Ngơi Bảo Vệ Mắt (Không thể tắt - Bắt buộc nhập mật khẩu mới mở khóa được) */}
       {isTimeLocked && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(15, 23, 42, 0.92)',
-          backdropFilter: 'blur(12px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 200,
-          padding: '1.5rem',
-          textAlign: 'center'
-        }}>
-          <div className="glass-card" style={{ maxWidth: '480px', padding: '2.5rem', borderRadius: '2rem' }}>
-            <div style={{ fontSize: '64px', marginBottom: '1rem' }} className="animate-float">
-              🧘‍♂️ 🍃 🦉
-            </div>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.5rem' }}>
-              Đã Đến Giờ Nghỉ Ngơi Rồi Bé Ơi!
-            </h2>
-            <p style={{ color: '#475569', fontSize: '1rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
-              Bé đã học chăm chỉ được <strong>{screenTimeLimit} phút</strong> rồi. Hãy cùng bạn <strong>{activePet.name}</strong> vươn vai, uống một ngụm nước và nhìn xa ra ngoài cửa sổ để thư giãn mắt nhé!
-            </p>
-            <button
-              onClick={() => {
-                setShowParentModal(true);
-                setIsTimeLocked(false);
-              }}
-              className="btn-arcade btn-arcade-primary"
-            >
-              🛡️ Ba Mẹ Mở Khóa Thêm Giờ
-            </button>
-          </div>
-        </div>
+        <ScreenTimeLockModal
+          screenTimeLimit={screenTimeLimit}
+          parentPassword={parentPassword}
+          onUnlock={(extraTime) => {
+            if (extraTime === 'unlimited') {
+              setScreenTimeLimit(999);
+            } else {
+              setScreenTimeLimit((prev) => prev + Number(extraTime));
+            }
+            setMinutesPlayed(0);
+            setIsTimeLocked(false);
+          }}
+        />
       )}
     </div>
   );
