@@ -251,7 +251,53 @@ export const PETS = [
     level: 1,
     perk: 'Tăng 10% năng lượng khi giải đúng Toán học',
     specialMove: 'Hơi Thở Tri Thức',
-    color: '#ff6b6b'
+    color: '#ff6b6b',
+    evolutions: [
+      {
+        tier: 1,
+        minLevel: 1,
+        name: 'Rồng Con Đốm Lửa',
+        title: 'Dũng Cảm & Tò Mò (Tập Sự)',
+        avatar: '🐲',
+        badge: 'Bậc 1: Sơ Sinh',
+        specialMove: 'Hơi Thở Tri Thức',
+        perk: 'Tăng 10% năng lượng khi giải đúng Toán học',
+        description: 'Bé rồng nhỏ đáng yêu, luôn tò mò khám phá mọi điều mới mẻ!'
+      },
+      {
+        tier: 2,
+        minLevel: 10,
+        name: 'Hỏa Long Tri Thức',
+        title: 'Bùng Nổ Sức Mạnh Rực Lửa',
+        avatar: '🔥🐲',
+        badge: 'Bậc 2: Hỏa Long',
+        specialMove: 'Cầu Lửa Trạng Nguyên',
+        perk: 'Tăng 20% năng lượng và +2 xu mỗi ải giải đúng',
+        description: 'Đôi cánh lửa kiêu hãnh, biến mọi thử thách toán học thành trò chơi!'
+      },
+      {
+        tier: 3,
+        minLevel: 20,
+        name: 'Thần Long Lôi Điện',
+        title: 'Chúa Tể Sấm Sét Đại Ngàn',
+        avatar: '⚡🐉',
+        badge: 'Bậc 3: Lôi Long',
+        specialMove: 'Sấm Sét Vạn Trượng',
+        perk: 'Tạo khiên bảo vệ 1 lần sai và +5 xu tri thức',
+        description: 'Vảy rồng lấp lánh như sấm sét, uy dũng dẫn đầu bảng vàng!'
+      },
+      {
+        tier: 4,
+        minLevel: 30,
+        name: 'Thiên Long Vũ Trụ Hoàng Kim',
+        title: 'Đế Vương Rồng Bất Khả Chiến Bại',
+        avatar: '👑✨🐉',
+        badge: 'Bậc 4: Tối Thượng',
+        specialMove: 'Thiên Hà Khải Hoàn',
+        perk: 'Tăng gấp đôi xu thưởng và hào quang vinh quang vô tận',
+        description: 'Thần thú tối thượng của Vũ Trụ Tri Thức, hào quang vĩnh cửu!'
+      }
+    ]
   },
   {
     id: 'owl',
@@ -261,7 +307,53 @@ export const PETS = [
     level: 1,
     perk: 'Mở rộng 1 gợi ý đặc biệt cho Tiếng Việt',
     specialMove: 'Cánh Soi Sáng',
-    color: '#4ecdc4'
+    color: '#4ecdc4',
+    evolutions: [
+      {
+        tier: 1,
+        minLevel: 1,
+        name: 'Cú Mèo Mắt Sáng',
+        title: 'Thông Thái & Tỉ Mỉ (Tập Sự)',
+        avatar: '🦉',
+        badge: 'Bậc 1: Sơ Sinh',
+        specialMove: 'Cánh Soi Sáng',
+        perk: 'Mở rộng 1 gợi ý đặc biệt cho Tiếng Việt',
+        description: 'Đôi mắt to tròn tinh anh, đọc sách không biết mệt!'
+      },
+      {
+        tier: 2,
+        minLevel: 10,
+        name: 'Cú Phù Thủy Học Giả',
+        title: 'Bậc Thầy Cổ Thư Huyền Bí',
+        avatar: '🔮🦉',
+        badge: 'Bậc 2: Học Giả',
+        specialMove: 'Mắt Thần Tri Giác',
+        perk: 'Luôn nhận gợi ý sâu sắc và bảo vệ điểm số',
+        description: 'Nắm giữ quả cầu pha lê ngôn từ, tinh thông vạn cuốn sách hay!'
+      },
+      {
+        tier: 3,
+        minLevel: 20,
+        name: 'Thần Điêu Dạ Nguyệt',
+        title: 'Chúa Tể Bầu Trời Đêm',
+        avatar: '🌙✨🦅',
+        badge: 'Bậc 3: Dạ Nguyệt',
+        specialMove: 'Ánh Trăng Soi Rạng',
+        perk: 'Tự động soi rọi manh mối trong mọi câu hỏi',
+        description: 'Sải cánh vút qua màn đêm, mang ánh sáng tri thức tới muôn phương!'
+      },
+      {
+        tier: 4,
+        minLevel: 30,
+        name: 'Phượng Hoàng Trí Tuệ Vĩnh Cửu',
+        title: 'Thánh Thú Khôn Ngoan Vũ Trụ',
+        avatar: '👑🌌🦅',
+        badge: 'Bậc 4: Tối Thượng',
+        specialMove: 'Phượng Hoàng Trùng Sinh',
+        perk: 'Tỏa ánh hào quang trí tuệ soi sáng mọi câu đố',
+        description: 'Linh thú huyền thoại đại diện cho đỉnh cao học vấn muôn đời!'
+      }
+    ]
   },
   {
     id: 'fox',
@@ -271,7 +363,53 @@ export const PETS = [
     level: 1,
     perk: 'Nhận thêm 5 xu tri thức sau mỗi trận',
     specialMove: 'Móng Vuốt Nhanh Trí',
-    color: '#f39c12'
+    color: '#f39c12',
+    evolutions: [
+      {
+        tier: 1,
+        minLevel: 1,
+        name: 'Cáo Vàng Nhanh Nhẹn',
+        title: 'Linh Hoạt & Sáng Tạo (Tập Sự)',
+        avatar: '🦊',
+        badge: 'Bậc 1: Sơ Sinh',
+        specialMove: 'Móng Vuốt Nhanh Trí',
+        perk: 'Nhận thêm 5 xu tri thức sau mỗi trận',
+        description: 'Nhanh như một cơn gió, giải toán chớp mắt là xong!'
+      },
+      {
+        tier: 2,
+        minLevel: 10,
+        name: 'Cáo Lửa Tam Vĩ',
+        title: 'Nhanh Nhẹn Tinh Anh',
+        avatar: '⚡🦊',
+        badge: 'Bậc 2: Tam Vĩ',
+        specialMove: 'Hỏa Hồ Siêu Tốc',
+        perk: 'Tăng tốc độ nhận thưởng +10 xu mỗi câu đúng',
+        description: 'Ba chiếc đuôi lửa thoăn thoắt, tư duy linh hoạt vượt trội!'
+      },
+      {
+        tier: 3,
+        minLevel: 20,
+        name: 'Cửu Vĩ Linh Hồ',
+        title: 'Tiên Thú Hồ Ly Chín Đuôi',
+        avatar: '🔥✨🦊',
+        badge: 'Bậc 3: Cửu Vĩ',
+        specialMove: 'Hồ Ly Thần Bí',
+        perk: 'Thưởng thêm ngôi sao may mắn sau mỗi ải',
+        description: 'Chín chiếc đuôi rực rỡ linh khí, thông minh tuyệt đỉnh khó ai bì!'
+      },
+      {
+        tier: 4,
+        minLevel: 30,
+        name: 'Bạch Kim Cửu Vĩ Thái Dương',
+        title: 'Thần Thú Ánh Sáng Tối Thượng',
+        avatar: '👑🌟🦊',
+        badge: 'Bậc 4: Tối Thượng',
+        specialMove: 'Bão Lửa Thái Dương',
+        perk: 'Kích hoạt cơn mưa xu vàng và nhân ba điểm kinh nghiệm',
+        description: 'Thần hồ mặt trời tỏa sáng rực rỡ khắp cõi giang sơn tri thức!'
+      }
+    ]
   },
   {
     id: 'unicorn',
@@ -281,9 +419,73 @@ export const PETS = [
     level: 1,
     perk: 'Bảo vệ chuỗi Streak khi quên học 1 ngày',
     specialMove: 'Ánh Sáng Yêu Thương',
-    color: '#a29bfe'
+    color: '#a29bfe',
+    evolutions: [
+      {
+        tier: 1,
+        minLevel: 1,
+        name: 'Kỳ Lân Cầu Vồng',
+        title: 'Hiền Hòa & Kiên Trì (Tập Sự)',
+        avatar: '🦄',
+        badge: 'Bậc 1: Sơ Sinh',
+        specialMove: 'Ánh Sáng Yêu Thương',
+        perk: 'Bảo vệ chuỗi Streak khi quên học 1 ngày',
+        description: 'Trái tim ấm áp, luôn đồng hành và khích lệ bé kiên trì!'
+      },
+      {
+        tier: 2,
+        minLevel: 10,
+        name: 'Kỳ Lân Băng Ngọc',
+        title: 'Thần Mã Hộ Mệnh Tinh Khiết',
+        avatar: '🌈🦄',
+        badge: 'Bậc 2: Băng Ngọc',
+        specialMove: 'Cầu Vồng Phép Màu',
+        perk: 'Bảo vệ chuỗi học tập và nhân đôi năng lượng vui vẻ',
+        description: 'Chiếc sừng phát ra hào quang 7 sắc cầu vồng diệu kỳ!'
+      },
+      {
+        tier: 3,
+        minLevel: 20,
+        name: 'Thiên Mã Pegasus Bạch Kim',
+        title: 'Ngựa Thần Có Cánh Lừng Lẫy',
+        avatar: '✨💎🦄',
+        badge: 'Bậc 3: Thiên Mã',
+        specialMove: 'Đôi Cánh Thần Tiên',
+        perk: 'Bảo vệ hoàn hảo khỏi mọi áp lực, luôn giữ tâm trạng tối đa',
+        description: 'Đôi cánh ngọc sải rộng bay lượn trên chín tầng mây!'
+      },
+      {
+        tier: 4,
+        minLevel: 30,
+        name: 'Kỳ Lân Tinh Tú Ngân Hà',
+        title: 'Thần Thú Ngân Hà Bất Tử',
+        avatar: '👑🌌🦄',
+        badge: 'Bậc 4: Tối Thượng',
+        specialMove: 'Tinh Tú Vĩnh Cửu',
+        perk: 'Ban phước lành tối cao cho mọi môn học',
+        description: 'Mang trên mình sức mạnh của hàng triệu vì sao lấp lánh!'
+      }
+    ]
   }
 ];
+
+export const getPetWithEvolution = (pet, tier = 1) => {
+  if (!pet) return null;
+  const basePet = PETS.find(p => p.id === pet.id) || PETS[0];
+  const safeTier = Math.max(1, Math.min(4, tier));
+  const evo = basePet.evolutions.find(e => e.tier === safeTier) || basePet.evolutions[0];
+  return {
+    ...basePet,
+    name: evo.name,
+    title: evo.title,
+    avatar: evo.avatar,
+    badge: evo.badge,
+    specialMove: evo.specialMove,
+    perk: evo.perk,
+    description: evo.description,
+    currentTier: safeTier
+  };
+};
 
 export const PET_ITEMS = [
   { id: 'hat_wizard', name: 'Nón Phù Thủy Tri Thức', icon: '🧙‍♂️', cost: 15, owned: true, type: 'hat' },

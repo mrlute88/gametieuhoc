@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import { soundManager } from '../utils/audio';
 
-export default function ParentModal({ stats, screenTimeLimit, setScreenTimeLimit, onClose }) {
+export default function ParentModal({
+  stats,
+  screenTimeLimit,
+  setScreenTimeLimit,
+  onSetLevel,
+  onAddCoins,
+  onTriggerEvolutionCutscene,
+  onClose
+}) {
   // Parental Gate: Câu hỏi toán xác thực người lớn
   const [unlocked, setUnlocked] = useState(false);
   const [numA] = useState(() => Math.floor(Math.random() * 20) + 15);
@@ -187,6 +195,117 @@ export default function ParentModal({ stats, screenTimeLimit, setScreenTimeLimit
               <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.4rem' }}>
                 Hệ thống sẽ tự động khóa và gợi ý bài tập thư giãn mắt khi hết giờ quy định.
               </p>
+            </div>
+
+            {/* Công cụ Thử nghiệm Nhanh (Dành cho Giáo viên & Phụ huynh) */}
+            <div style={{ marginBottom: '1.5rem', background: '#fdf4ff', padding: '1rem', borderRadius: '1rem', border: '1.5px solid #f0abfc' }}>
+              <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#86198f', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <span>⚡</span>
+                <span>Công Cụ Khảo Sát Tiến Hóa & Cửa Hàng</span>
+              </div>
+              <p style={{ fontSize: '0.8rem', color: '#701a75', marginBottom: '0.75rem' }}>
+                Giúp phụ huynh và thầy cô thử nghiệm nhanh các mốc cấp độ (10, 20, 30), bài kiểm tra 30 câu và hoạt cảnh tiến hóa:
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.5rem' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundManager.playSuccess();
+                    onSetLevel && onSetLevel(10);
+                    onClose();
+                  }}
+                  style={{
+                    background: '#ffffff',
+                    border: '1.5px solid #d946ef',
+                    color: '#a21caf',
+                    padding: '0.45rem',
+                    borderRadius: '0.5rem',
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  ⚡ Đặt Cấp 10
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundManager.playSuccess();
+                    onSetLevel && onSetLevel(20);
+                    onClose();
+                  }}
+                  style={{
+                    background: '#ffffff',
+                    border: '1.5px solid #d946ef',
+                    color: '#a21caf',
+                    padding: '0.45rem',
+                    borderRadius: '0.5rem',
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  ⚡ Đặt Cấp 20
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundManager.playSuccess();
+                    onSetLevel && onSetLevel(30);
+                    onClose();
+                  }}
+                  style={{
+                    background: '#ffffff',
+                    border: '1.5px solid #d946ef',
+                    color: '#a21caf',
+                    padding: '0.45rem',
+                    borderRadius: '0.5rem',
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  ⚡ Đặt Cấp 30
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundManager.playClick();
+                    onAddCoins && onAddCoins(100);
+                  }}
+                  style={{
+                    background: '#ffffff',
+                    border: '1.5px solid #f59e0b',
+                    color: '#b45309',
+                    padding: '0.45rem',
+                    borderRadius: '0.5rem',
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  🪙 +100 Xu Vàng
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onTriggerEvolutionCutscene && onTriggerEvolutionCutscene();
+                  }}
+                  style={{
+                    background: 'linear-gradient(135deg, #d946ef, #8b5cf6)',
+                    border: 'none',
+                    color: '#ffffff',
+                    padding: '0.45rem',
+                    borderRadius: '0.5rem',
+                    fontSize: '0.82rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    gridColumn: '1 / -1'
+                  }}
+                >
+                  🎬 Xem Thử Hoạt Cảnh Tiến Hóa (Demo)
+                </button>
+              </div>
             </div>
 
             {/* Cam kết bảo mật trẻ em */}

@@ -9,6 +9,9 @@ export default function HeaderBar({
   level,
   xp,
   maxXp,
+  equippedItem,
+  canEvolve,
+  onOpenEvolutionExam,
   selectedLevel = 'level1',
   onToggleLevel,
   onOpenPetSelector,
@@ -43,39 +46,56 @@ export default function HeaderBar({
     }}>
       {/* 1. Pet Avatar & Level */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        <button
-          id="btn-avatar-pet"
-          onClick={() => {
-            soundManager.playClick();
-            onOpenPetSelector();
-          }}
-          title="Bấm để đổi Bạn Đồng Hành"
-          style={{
-            width: '56px',
-            height: '56px',
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%)',
-            border: '3px solid #ffffff',
-            boxShadow: '0 4px 10px rgba(99, 102, 241, 0.35)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '32px',
-            cursor: 'pointer',
-            transition: 'transform 0.15s ease'
-          }}
-          onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.92)')}
-          onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-        >
-          {pet.avatar}
-        </button>
+        <div style={{ position: 'relative' }}>
+          <button
+            id="btn-avatar-pet"
+            onClick={() => {
+              soundManager.playClick();
+              onOpenPetSelector();
+            }}
+            title="Bấm để đổi Bạn Đồng Hành"
+            style={{
+              width: '56px',
+              height: '56px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%)',
+              border: '3px solid #ffffff',
+              boxShadow: '0 4px 10px rgba(99, 102, 241, 0.35)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '32px',
+              cursor: 'pointer',
+              transition: 'transform 0.15s ease'
+            }}
+            onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.92)')}
+            onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+          >
+            {pet.avatar}
+          </button>
+          {equippedItem && (
+            <span
+              title={`Đang diện: ${equippedItem.name}`}
+              style={{
+                position: 'absolute',
+                top: '-8px',
+                right: '-6px',
+                fontSize: '20px',
+                filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.25))',
+                pointerEvents: 'none'
+              }}
+            >
+              {equippedItem.icon}
+            </span>
+          )}
+        </div>
 
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
             <span style={{
               fontFamily: 'var(--font-display)',
               fontWeight: 800,
-              fontSize: '1.15rem',
+              fontSize: '1.12rem',
               color: '#1e293b'
             }}>
               {pet.name}
@@ -91,6 +111,19 @@ export default function HeaderBar({
             }}>
               Lv.{level}
             </span>
+            {pet.badge && (
+              <span style={{
+                background: '#fef3c7',
+                color: '#b45309',
+                border: '1px solid #fde68a',
+                fontSize: '0.7rem',
+                fontWeight: 800,
+                padding: '1px 6px',
+                borderRadius: '9999px'
+              }}>
+                {pet.badge}
+              </span>
+            )}
           </div>
 
           {/* Thanh EXP */}
@@ -111,6 +144,36 @@ export default function HeaderBar({
             }} />
           </div>
         </div>
+
+        {/* Nút Kích hoạt Bài Thi Tiến Hóa khi đủ cấp độ */}
+        {canEvolve && (
+          <button
+            onClick={() => {
+              soundManager.playClick();
+              if (onOpenEvolutionExam) onOpenEvolutionExam();
+            }}
+            title="Đủ điều kiện thăng cấp tiến hóa! Bấm để làm Bài Kiểm Tra 30 Câu!"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              background: 'linear-gradient(135deg, #f59e0b, #ef4444)',
+              color: '#ffffff',
+              border: '2px solid #fde68a',
+              padding: '0.35rem 0.85rem',
+              borderRadius: '9999px',
+              fontFamily: 'var(--font-display)',
+              fontWeight: 800,
+              fontSize: '0.85rem',
+              cursor: 'pointer',
+              boxShadow: '0 4px 15px rgba(245, 158, 11, 0.45)',
+              animation: 'pulse 1.5s infinite'
+            }}
+          >
+            <span>⚡</span>
+            <span>Thi Tiến Hóa Cấp {Math.min(30, Math.floor(level / 10) * 10)}</span>
+          </button>
+        )}
 
         {/* Level Switcher Quick Pill */}
         {onToggleLevel && (

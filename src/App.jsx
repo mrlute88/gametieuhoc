@@ -7,26 +7,111 @@ import ArcadeMiniGame from './components/ArcadeMiniGame';
 import PetSelectorModal from './components/PetSelectorModal';
 import PetSanctuary from './components/PetSanctuary';
 import ParentModal from './components/ParentModal';
-import { PETS } from './data/curriculumData';
+import EvolutionExamModal from './components/EvolutionExamModal';
+import EvolutionCutsceneModal from './components/EvolutionCutsceneModal';
+import { PETS, PET_ITEMS, getPetWithEvolution } from './data/curriculumData';
 import { soundManager } from './utils/audio';
 
 export default function App() {
-  // Trạng thái người chơi & Thú cưng
-  const [pet, setPet] = useState(PETS[0]);
-  const [coins, setCoins] = useState(30);
-  const [stars, setStars] = useState(4);
-  const [streak, setStreak] = useState(3);
-  const [level, setLevel] = useState(1);
-  const [xp, setXp] = useState(120);
+  // 1. Thú cưng gốc & Cấp bậc tiến hóa (Bậc 1, 2, 3, 4)
+  const [basePet, setBasePet] = useState(() => {
+    try {
+      const savedId = localStorage.getItem('gametieuhoc_base_pet_id');
+      return PETS.find(p => p.id === savedId) || PETS[0];
+    } catch {
+      return PETS[0];
+    }
+  });
+
+  const [petTiers, setPetTiers] = useState(() => {
+    try {
+      const saved = localStorage.getItem('gametieuhoc_pet_tiers');
+      return saved ? JSON.parse(saved) : { dragon: 1, owl: 1, fox: 1, unicorn: 1 };
+    } catch {
+      return { dragon: 1, owl: 1, fox: 1, unicorn: 1 };
+    }
+  });
+
+  const currentTier = petTiers[basePet.id] || 1;
+  const activePet = getPetWithEvolution(basePet, currentTier);
+
+  // 2. Tài sản người chơi & Thống kê tích lũy (Có lưu LocalStorage)
+  const [coins, setCoins] = useState(() => {
+    const s = localStorage.getItem('gametieuhoc_coins');
+    return s ? parseInt(s, 10) : 30;
+  });
+
+  const [stars, setStars] = useState(() => {
+    const s = localStorage.getItem('gametieuhoc_stars');
+    return s ? parseInt(s, 10) : 4;
+  });
+
+  const [streak, setStreak] = useState(() => {
+    const s = localStorage.getItem('gametieuhoc_streak');
+    return s ? parseInt(s, 10) : 3;
+  });
+
+  const [level, setLevel] = useState(() => {
+    const s = localStorage.getItem('gametieuhoc_player_level');
+    return s ? parseInt(s, 10) : 1;
+  });
+
+  const [xp, setXp] = useState(() => {
+    const s = localStorage.getItem('gametieuhoc_player_xp');
+    return s ? parseInt(s, 10) : 120;
+  });
   const maxXp = 300;
 
-  // Điều hướng màn hình: 'map' | 'stages' | 'quiz'
+  // 3. Tủ đồ phụ kiện & Năng lượng (Khắc phục lỗi mất phụ kiện khi đóng shop)
+  const [ownedItemIds, setOwnedItemIds] = useState(() => {
+    try {
+      const saved = localStorage.getItem('gametieuhoc_owned_items');
+      return saved ? JSON.parse(saved) : ['hat_wizard'];
+    } catch {
+      return ['hat_wizard'];
+    }
+  });
+
+  const [equippedItemId, setEquippedItemId] = useState(() => {
+    return localStorage.getItem('gametieuhoc_equipped_item') || 'hat_wizard';
+  });
+
+  const [petEnergy, setPetEnergy] = useState(() => {
+    const saved = localStorage.getItem('gametieuhoc_pet_energy');
+    return saved ? parseInt(saved, 10) : 85;
+  });
+
+  const equippedItem = PET_ITEMS.find(i => i.id === equippedItemId) || null;
+
+  // 4. Các ải đã hoàn thành
+  const [completedLessonIds, setCompletedLessonIds] = useState(() => {
+    try {
+      const s = localStorage.getItem('gametieuhoc_completed_lessons');
+      return s ? JSON.parse(s) : ['m1', 'v1'];
+    } catch {
+      return ['m1', 'v1'];
+    }
+  });
+
+  // 5. Đồng bộ LocalStorage liên tục
+  useEffect(() => { localStorage.setItem('gametieuhoc_base_pet_id', basePet.id); }, [basePet]);
+  useEffect(() => { localStorage.setItem('gametieuhoc_pet_tiers', JSON.stringify(petTiers)); }, [petTiers]);
+  useEffect(() => { localStorage.setItem('gametieuhoc_coins', coins); }, [coins]);
+  useEffect(() => { localStorage.setItem('gametieuhoc_stars', stars); }, [stars]);
+  useEffect(() => { localStorage.setItem('gametieuhoc_streak', streak); }, [streak]);
+  useEffect(() => { localStorage.setItem('gametieuhoc_player_level', level); }, [level]);
+  useEffect(() => { localStorage.setItem('gametieuhoc_player_xp', xp); }, [xp]);
+  useEffect(() => { localStorage.setItem('gametieuhoc_completed_lessons', JSON.stringify(completedLessonIds)); }, [completedLessonIds]);
+  useEffect(() => { localStorage.setItem('gametieuhoc_owned_items', JSON.stringify(ownedItemIds)); }, [ownedItemIds]);
+  useEffect(() => { localStorage.setItem('gametieuhoc_equipped_item', equippedItemId); }, [equippedItemId]);
+  useEffect(() => { localStorage.setItem('gametieuhoc_pet_energy', petEnergy); }, [petEnergy]);
+
+  // 6. Điều hướng màn hình: 'map' | 'stages' | 'quiz'
   const [currentView, setCurrentView] = useState('map');
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [selectedStageIndex, setSelectedStageIndex] = useState(0);
-  const [completedLessonIds, setCompletedLessonIds] = useState(['m1', 'v1']);
 
-  // Lựa chọn Mức độ học tập: 'level1' (Lớp 1 - 2) | 'level2' (Lớp 3 - 4 - 5)
+  // 7. Mức độ học tập: 'level1' (Lớp 1 - 2) | 'level2' (Lớp 3 - 4 - 5)
   const [selectedLevel, setSelectedLevel] = useState(() => {
     return localStorage.getItem('gametieuhoc_level') || 'level1';
   });
@@ -42,13 +127,24 @@ export default function App() {
     handleSelectLevel(nextLevel);
   };
 
+  // 8. Quản lý Điều kiện Tiến hóa theo Cấp Độ (Cấp 10, 20, 30...)
+  let targetTier = 1;
+  if (level >= 30) targetTier = 4;
+  else if (level >= 20) targetTier = 3;
+  else if (level >= 10) targetTier = 2;
+
+  const canEvolve = currentTier < targetTier;
+
   // Modals
   const [showPetModal, setShowPetModal] = useState(false);
   const [showSanctuary, setShowSanctuary] = useState(false);
   const [showParentModal, setShowParentModal] = useState(false);
   const [showArcadeGame, setShowArcadeGame] = useState(false);
+  const [showEvolutionExam, setShowEvolutionExam] = useState(false);
+  const [showEvolutionCutscene, setShowEvolutionCutscene] = useState(false);
+  const [cutsceneData, setCutsceneData] = useState({ oldPet: activePet, newPet: activePet });
 
-  // Quản lý thời gian chơi & An toàn trẻ em (Screen Time Limit)
+  // 9. Quản lý thời gian chơi & An toàn trẻ em (Screen Time Limit)
   const [screenTimeLimit, setScreenTimeLimit] = useState(30);
   const [minutesPlayed, setMinutesPlayed] = useState(12);
   const [isTimeLocked, setIsTimeLocked] = useState(false);
@@ -100,8 +196,22 @@ export default function App() {
       setXp((prevXp) => {
         const newXp = prevXp + 60;
         if (newXp >= maxXp) {
-          setLevel((lvl) => lvl + 1);
+          const nextLvl = level + 1;
+          setLevel(nextLvl);
           soundManager.playSuccess();
+
+          // Kiểm tra nếu chạm mốc Cấp 10, 20, 30... mà chưa tiến hóa -> Kích hoạt bài kiểm tra
+          let nextTargetTier = 1;
+          if (nextLvl >= 30) nextTargetTier = 4;
+          else if (nextLvl >= 20) nextTargetTier = 3;
+          else if (nextLvl >= 10) nextTargetTier = 2;
+
+          if (currentTier < nextTargetTier) {
+            setTimeout(() => {
+              setShowEvolutionExam(true);
+            }, 800);
+          }
+
           return newXp - maxXp;
         }
         return newXp;
@@ -121,24 +231,82 @@ export default function App() {
     }
   };
 
+  // Vượt qua bài kiểm tra 30 câu (100% chính xác) -> Kích hoạt Hoạt Cảnh Tiến Hóa
+  const handlePassExam = () => {
+    const oldForm = getPetWithEvolution(basePet, currentTier);
+    const nextTier = Math.min(4, currentTier + 1);
+    const newForm = getPetWithEvolution(basePet, nextTier);
+
+    setPetTiers((prev) => ({
+      ...prev,
+      [basePet.id]: nextTier
+    }));
+
+    setCutsceneData({ oldPet: oldForm, newPet: newForm });
+    setShowEvolutionExam(false);
+    setShowEvolutionCutscene(true);
+  };
+
+  // Mua phụ kiện vĩnh viễn
+  const handleBuyItem = (item) => {
+    setCoins((c) => Math.max(0, c - item.cost));
+    setOwnedItemIds((prev) => [...new Set([...prev, item.id])]);
+  };
+
+  // Trang bị phụ kiện
+  const handleEquipItem = (itemId) => {
+    setEquippedItemId(itemId);
+  };
+
+  // Cho ăn táo thần
+  const handleFeedPet = () => {
+    setCoins((c) => Math.max(0, c - 5));
+    setPetEnergy((e) => Math.min(100, e + 15));
+  };
+
   // Thưởng khi hoàn thành Mini-game Đua xe 60s
   const handleFinishArcade = ({ coins: earnedCoins }) => {
-    setCoins(prev => prev + earnedCoins);
+    setCoins((prev) => prev + earnedCoins);
     setShowArcadeGame(false);
     soundManager.playSuccess();
+  };
+
+  // Dành cho Phụ huynh / Giáo viên test nhanh Cấp Độ và Hoạt cảnh
+  const handleSetLevelFast = (lvl) => {
+    setLevel(lvl);
+    let target = 1;
+    if (lvl >= 30) target = 4;
+    else if (lvl >= 20) target = 3;
+    else if (lvl >= 10) target = 2;
+
+    if (currentTier < target) {
+      setShowEvolutionExam(true);
+    }
+  };
+
+  const handleTriggerDemoCutscene = () => {
+    const oldForm = getPetWithEvolution(basePet, currentTier);
+    const demoTier = currentTier < 4 ? currentTier + 1 : 1;
+    const newForm = getPetWithEvolution(basePet, demoTier);
+    setCutsceneData({ oldPet: oldForm, newPet: newForm });
+    setShowParentModal(false);
+    setShowEvolutionCutscene(true);
   };
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* 1. Header Bar */}
       <HeaderBar
-        pet={pet}
+        pet={activePet}
         coins={coins}
         stars={stars}
         streak={streak}
         level={level}
         xp={xp}
         maxXp={maxXp}
+        equippedItem={equippedItem}
+        canEvolve={canEvolve}
+        onOpenEvolutionExam={() => setShowEvolutionExam(true)}
         selectedLevel={selectedLevel}
         onToggleLevel={handleToggleLevel}
         onOpenPetSelector={() => setShowPetModal(true)}
@@ -176,7 +344,7 @@ export default function App() {
         {currentView === 'quiz' && selectedSubject && (
           <QuizBattleView
             subject={selectedSubject}
-            pet={pet}
+            pet={activePet}
             stageIndex={selectedStageIndex}
             onCompleteLesson={handleCompleteLesson}
             onBackToStages={() => setCurrentView('stages')}
@@ -197,23 +365,31 @@ export default function App() {
         borderTop: '1px solid #e2e8f0',
         backgroundColor: '#ffffff88'
       }}>
-        🏰 <strong>Vương Quốc Tri Thức</strong> • 17 Hòn Đảo Tri Thức • 512 Màn Chơi Toàn Diện Chuẩn GDPT 2018 (Lớp 1 - 5) • Trải nghiệm Game Hóa Tương Tác
+        🏰 <strong>Vương Quốc Tri Thức</strong> • 17 Hòn Đảo Tri Thức • 512 Màn Chơi Toàn Diện Chuẩn GDPT 2018 (Lớp 1 - 5) • Hệ Thống Tiến Hóa Linh Thú Phong Cách Pokemon
       </footer>
 
       {/* 4. Modals */}
       {showPetModal && (
         <PetSelectorModal
-          currentPet={pet}
-          onSelectPet={setPet}
+          currentPet={basePet}
+          onSelectPet={(selected) => {
+            setBasePet(selected);
+          }}
           onClose={() => setShowPetModal(false)}
         />
       )}
 
       {showSanctuary && (
         <PetSanctuary
-          pet={pet}
+          pet={activePet}
           coins={coins}
           setCoins={setCoins}
+          ownedItemIds={ownedItemIds}
+          onBuyItem={handleBuyItem}
+          equippedItemId={equippedItemId}
+          onEquipItem={handleEquipItem}
+          petEnergy={petEnergy}
+          onFeedPet={handleFeedPet}
           onClose={() => setShowSanctuary(false)}
         />
       )}
@@ -223,11 +399,35 @@ export default function App() {
           stats={stats}
           screenTimeLimit={screenTimeLimit}
           setScreenTimeLimit={setScreenTimeLimit}
+          onSetLevel={handleSetLevelFast}
+          onAddCoins={(c) => setCoins((prev) => prev + c)}
+          onTriggerEvolutionCutscene={handleTriggerDemoCutscene}
           onClose={() => setShowParentModal(false)}
         />
       )}
 
-      {/* 5. Mini-Game Đua Xe 60s */}
+      {/* 5. Bài Kiểm Tra Tiến Hóa 30 Câu Hỏi Liên Môn */}
+      {showEvolutionExam && (
+        <EvolutionExamModal
+          pet={activePet}
+          targetTier={targetTier}
+          level={Math.max(10, Math.floor(level / 10) * 10)}
+          selectedLevel={selectedLevel}
+          onPassExam={handlePassExam}
+          onClose={() => setShowEvolutionExam(false)}
+        />
+      )}
+
+      {/* 6. Hoạt Cảnh Tiến Hóa Phong Cách Pokémon */}
+      {showEvolutionCutscene && (
+        <EvolutionCutsceneModal
+          oldPet={cutsceneData.oldPet}
+          newPet={cutsceneData.newPet}
+          onComplete={() => setShowEvolutionCutscene(false)}
+        />
+      )}
+
+      {/* 7. Mini-Game Đua Xe 60s */}
       {showArcadeGame && (
         <ArcadeMiniGame
           initialLevel={selectedLevel}
@@ -236,7 +436,7 @@ export default function App() {
         />
       )}
 
-      {/* 6. Khóa Nghỉ Ngơi Bảo Vệ Mắt */}
+      {/* 8. Khóa Nghỉ Ngơi Bảo Vệ Mắt */}
       {isTimeLocked && (
         <div style={{
           position: 'fixed',
@@ -261,7 +461,7 @@ export default function App() {
               Đã Đến Giờ Nghỉ Ngơi Rồi Bé Ơi!
             </h2>
             <p style={{ color: '#475569', fontSize: '1rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
-              Bé đã học chăm chỉ được <strong>{screenTimeLimit} phút</strong> rồi. Hãy cùng bạn <strong>{pet.name}</strong> vươn vai, uống một ngụm nước và nhìn xa ra ngoài cửa sổ để thư giãn mắt nhé!
+              Bé đã học chăm chỉ được <strong>{screenTimeLimit} phút</strong> rồi. Hãy cùng bạn <strong>{activePet.name}</strong> vươn vai, uống một ngụm nước và nhìn xa ra ngoài cửa sổ để thư giãn mắt nhé!
             </p>
             <button
               onClick={() => {
