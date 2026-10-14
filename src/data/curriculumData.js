@@ -1,17 +1,19 @@
 // Ngân hàng câu đố học tập GDPT 2018 Toàn Diện (Tiểu Học Lớp 1 - 5)
-// Mức 1 (Lớp 1 - 2): 8 Hòn Đảo Tri Thức (162 Ải)
-// Mức 2 (Lớp 3 - 4 - 5): 9 Hòn Đảo Chinh Phục (190 Ải Nâng Cao)
-// Tổng cộng: 17 Hòn Đảo & 352 Ải thử thách trí tuệ bám sát toàn diện SGK GDPT 2018
+// Mức 1 (Lớp 1 - 2): 8 Hòn Đảo Tri Thức (242 Ải - từ 30 đến 32 ải mỗi môn)
+// Mức 2 (Lớp 3 - 4 - 5): 9 Hòn Đảo Chinh Phục (270 Ải Nâng Cao - 30 ải mỗi môn)
+// Tổng cộng: 17 Hòn Đảo & 512 Ải thử thách trí tuệ bám sát toàn diện SGK GDPT 2018
 import {
   ethicsLessons,
   informaticsTechLessons,
   artsMusicLessons,
-  lifeSkillsLessons,
+  lifeSkillsLessons
+} from './additionalCurriculumLevel1.js';
+import {
   informaticsAdvLessons,
   technologyAdvLessons,
   ethicsAdvLessons,
   artsMusicAdvLessons
-} from './additionalCurriculumData';
+} from './additionalCurriculumLevel2.js';
 
 export const GRADE_LEVELS = [
   {

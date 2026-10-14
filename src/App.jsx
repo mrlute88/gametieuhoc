@@ -197,7 +197,7 @@ export default function App() {
         borderTop: '1px solid #e2e8f0',
         backgroundColor: '#ffffff88'
       }}>
-        🏰 <strong>Vương Quốc Tri Thức</strong> • 17 Hòn Đảo Tri Thức • 350+ Màn Chơi Toàn Diện Chuẩn GDPT 2018 (Lớp 1 - 5) • Trải nghiệm Game Hóa Tương Tác
+        🏰 <strong>Vương Quốc Tri Thức</strong> • 17 Hòn Đảo Tri Thức • 512 Màn Chơi Toàn Diện Chuẩn GDPT 2018 (Lớp 1 - 5) • Trải nghiệm Game Hóa Tương Tác
       </footer>
 
       {/* 4. Modals */}
