@@ -230,6 +230,7 @@ export default function App() {
       {/* 5. Mini-Game Đua Xe 60s */}
       {showArcadeGame && (
         <ArcadeMiniGame
+          initialLevel={selectedLevel}
           onFinishGame={handleFinishArcade}
           onClose={() => setShowArcadeGame(false)}
         />
