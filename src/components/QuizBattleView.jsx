@@ -56,7 +56,8 @@ export default function QuizBattleView({
 
   const handleReadQuestion = () => {
     if (!currentLesson) return;
-    soundManager.speakText(currentLesson.questionText, subject.id === 'english' ? 'en-US' : 'vi-VN');
+    const isEnglish = subject.id === 'english' || subject.id === 'english_adv';
+    soundManager.speakText(currentLesson.questionText, isEnglish ? 'en-US' : 'vi-VN');
   };
 
   const handleSelectOption = (option) => {
@@ -169,7 +170,7 @@ export default function QuizBattleView({
               className="btn-arcade btn-arcade-primary"
               style={{ fontSize: '1.1rem', padding: '0.75rem 2rem' }}
             >
-              🗺️ Trở Về 4 Hòn Đảo
+              🗺️ Trở Về Bản Đồ Đảo
             </button>
           </div>
         </div>

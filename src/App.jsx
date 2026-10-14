@@ -26,6 +26,22 @@ export default function App() {
   const [selectedStageIndex, setSelectedStageIndex] = useState(0);
   const [completedLessonIds, setCompletedLessonIds] = useState(['m1', 'v1']);
 
+  // Lựa chọn Mức độ học tập: 'level1' (Lớp 1 - 2) | 'level2' (Lớp 3 - 4 - 5)
+  const [selectedLevel, setSelectedLevel] = useState(() => {
+    return localStorage.getItem('gametieuhoc_level') || 'level1';
+  });
+
+  const handleSelectLevel = (lvlId) => {
+    setSelectedLevel(lvlId);
+    localStorage.setItem('gametieuhoc_level', lvlId);
+    soundManager.playClick();
+  };
+
+  const handleToggleLevel = () => {
+    const nextLevel = selectedLevel === 'level1' ? 'level2' : 'level1';
+    handleSelectLevel(nextLevel);
+  };
+
   // Modals
   const [showPetModal, setShowPetModal] = useState(false);
   const [showSanctuary, setShowSanctuary] = useState(false);
@@ -123,6 +139,8 @@ export default function App() {
         level={level}
         xp={xp}
         maxXp={maxXp}
+        selectedLevel={selectedLevel}
+        onToggleLevel={handleToggleLevel}
         onOpenPetSelector={() => setShowPetModal(true)}
         onOpenParentPortal={() => setShowParentModal(true)}
         onOpenSanctuary={() => setShowSanctuary(true)}
@@ -131,11 +149,13 @@ export default function App() {
 
       {/* 2. Main Content Area */}
       <main style={{ flex: 1, paddingBottom: '3rem' }}>
-        {/* Màn hình 1: 4 Hòn Đảo Lớn */}
+        {/* Màn hình 1: Các Hòn Đảo Thám Hiểm theo Cấp Độ */}
         {currentView === 'map' && (
           <WorldMap
             onSelectSubject={handleSelectSubject}
             completedLessonIds={completedLessonIds}
+            selectedLevel={selectedLevel}
+            onSelectLevel={handleSelectLevel}
           />
         )}
 

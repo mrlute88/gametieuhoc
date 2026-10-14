@@ -59,7 +59,7 @@ export default function StageSelectView({
             fontSize: '1rem'
           }}
         >
-          ⬅ Trở về 4 Hòn Đảo
+          ⬅ Trở về Bản Đồ Đảo
         </button>
 
         <div style={{ textAlign: 'center' }}>

@@ -9,6 +9,8 @@ export default function HeaderBar({
   level,
   xp,
   maxXp,
+  selectedLevel = 'level1',
+  onToggleLevel,
   onOpenPetSelector,
   onOpenParentPortal,
   onOpenSanctuary,
@@ -109,6 +111,35 @@ export default function HeaderBar({
             }} />
           </div>
         </div>
+
+        {/* Level Switcher Quick Pill */}
+        {onToggleLevel && (
+          <button
+            id="btn-header-toggle-level"
+            onClick={onToggleLevel}
+            title="Bấm để chuyển nhanh giữa Mức 1 (Lớp 1-2) và Mức 2 (Lớp 3-4-5)"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              background: selectedLevel === 'level2'
+                ? 'linear-gradient(135deg, #ede9fe 0%, #e0e7ff 100%)'
+                : 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)',
+              border: selectedLevel === 'level2' ? '2px solid #818cf8' : '2px solid #6ee7b7',
+              padding: '0.35rem 0.85rem',
+              borderRadius: '9999px',
+              fontFamily: 'var(--font-display)',
+              fontWeight: 800,
+              fontSize: '0.88rem',
+              color: selectedLevel === 'level2' ? '#4338ca' : '#047857',
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            <span>{selectedLevel === 'level2' ? '🚀 Lớp 3-4-5' : '🌱 Lớp 1-2'}</span>
+            <span style={{ fontSize: '0.75rem', opacity: 0.75 }}>⇄ Đổi</span>
+          </button>
+        )}
       </div>
 
       {/* 2. Phần thưởng tích lũy (Xu, Sao, Streak) */}

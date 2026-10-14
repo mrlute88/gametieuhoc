@@ -1,47 +1,102 @@
 import React from 'react';
-import { SUBJECTS, LESSONS } from '../data/curriculumData';
+import { GRADE_LEVELS, SUBJECTS_BY_LEVEL, LESSONS } from '../data/curriculumData';
 import { soundManager } from '../utils/audio';
 
-export default function WorldMap({ onSelectSubject, completedLessonIds = [] }) {
+export default function WorldMap({
+  onSelectSubject,
+  completedLessonIds = [],
+  selectedLevel = 'level1',
+  onSelectLevel
+}) {
+  const currentGrade = GRADE_LEVELS.find(g => g.id === selectedLevel) || GRADE_LEVELS[0];
+  const activeSubjects = SUBJECTS_BY_LEVEL[selectedLevel] || SUBJECTS_BY_LEVEL.level1;
+
   return (
-    <div style={{ maxWidth: '1024px', margin: '0 auto', padding: '1.5rem 1rem' }}>
-      {/* Title Banner */}
+    <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '1.5rem 1rem' }}>
+      {/* Title & Level Switcher Banner */}
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',
           gap: '0.5rem',
-          background: '#ede9fe',
-          color: '#4f46e5',
-          padding: '0.4rem 1rem',
+          background: currentGrade.bgBadge,
+          color: currentGrade.accentColor,
+          border: `2px solid ${currentGrade.borderBadge}`,
+          padding: '0.45rem 1.25rem',
           borderRadius: '9999px',
-          fontWeight: 700,
-          fontSize: '0.9rem',
-          marginBottom: '0.75rem'
+          fontWeight: 800,
+          fontSize: '0.92rem',
+          marginBottom: '0.85rem'
         }}>
-          🗺️ Bản Đồ Phiêu Lưu Lớp 1 - Chuẩn GDPT 2018
+          <span>{currentGrade.badge}</span>
+          <span>{currentGrade.title} - Chuẩn GDPT 2018</span>
         </div>
+
         <h1 style={{
           fontFamily: 'var(--font-display)',
           fontSize: '2.5rem',
           fontWeight: 800,
           color: '#1e293b',
-          lineHeight: 1.2
+          lineHeight: 1.2,
+          marginBottom: '0.5rem'
         }}>
           Chọn Hòn Đảo Để Bắt Đầu Thám Hiểm!
         </h1>
-        <p style={{ color: '#64748b', fontSize: '1.1rem', marginTop: '0.5rem' }}>
-          Đồng hành cùng Linh Thú cưng vượt qua các thử thách trí tuệ vui nhộn
+
+        <p style={{ color: '#64748b', fontSize: '1.05rem', maxWidth: '680px', margin: '0 auto 1.5rem', lineHeight: 1.5 }}>
+          {currentGrade.description}
         </p>
+
+        {/* 2-Level Grade Selector Switcher */}
+        <div style={{
+          display: 'inline-flex',
+          background: '#ffffff',
+          padding: '6px',
+          borderRadius: '9999px',
+          boxShadow: '0 8px 20px rgba(99, 102, 241, 0.12)',
+          border: '2px solid #e0e7ff',
+          gap: '8px',
+          flexWrap: 'wrap',
+          justifyContent: 'center'
+        }}>
+          {GRADE_LEVELS.map((lvl) => {
+            const isActive = selectedLevel === lvl.id;
+            return (
+              <button
+                key={lvl.id}
+                id={`btn-select-${lvl.id}`}
+                onClick={() => {
+                  if (onSelectLevel && selectedLevel !== lvl.id) {
+                    onSelectLevel(lvl.id);
+                  }
+                }}
+                className="btn-arcade"
+                style={{
+                  padding: '0.6rem 1.4rem',
+                  fontSize: '1rem',
+                  borderRadius: '9999px',
+                  border: isActive ? 'none' : '2px solid transparent',
+                  background: isActive ? 'linear-gradient(180deg, #6366f1 0%, #4f46e5 100%)' : '#f8fafc',
+                  color: isActive ? '#ffffff' : '#64748b',
+                  boxShadow: isActive ? '0 4px 10px rgba(79, 70, 229, 0.35)' : 'none',
+                  transform: 'none'
+                }}
+              >
+                <span>{lvl.badge}</span>
+                <span>{lvl.name}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Grid 4 Hòn đảo */}
+      {/* Grid các Hòn đảo theo mức lớp */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
         gap: '1.5rem'
       }}>
-        {SUBJECTS.map((sub) => {
+        {activeSubjects.map((sub) => {
           const subjectLessons = LESSONS[sub.id] || [];
           const completedCount = subjectLessons.filter(l => completedLessonIds.includes(l.id)).length;
           const totalCount = subjectLessons.length;
