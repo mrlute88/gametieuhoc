@@ -19,7 +19,7 @@ export default function ScreenTimeLockModal({
       onUnlock(selectedExtraTime);
     } else {
       soundManager.playTryAgain();
-      setErrorMsg('Mật khẩu không chính xác! Không thể mở khóa. (Mật khẩu mặc định: admin)');
+      setErrorMsg('Mật khẩu không chính xác! Vui lòng kiểm tra lại.');
     }
   };
 
@@ -168,7 +168,7 @@ export default function ScreenTimeLockModal({
                   setInputPass(e.target.value);
                   setErrorMsg('');
                 }}
-                placeholder="Nhập mật khẩu (Mặc định: admin)"
+                placeholder="Nhập mật khẩu phụ huynh..."
                 style={{
                   width: '100%',
                   padding: '0.65rem 2.8rem 0.65rem 0.85rem',
@@ -229,10 +229,6 @@ export default function ScreenTimeLockModal({
               🔓 Xác Nhận Mở Khóa Cho Bé
             </button>
           </form>
-
-          <div style={{ textAlign: 'center', marginTop: '0.75rem', fontSize: '0.78rem', color: '#64748b' }}>
-            💡 Mật khẩu mặc định của hệ thống là: <strong style={{ color: '#4f46e5' }}>admin</strong>
-          </div>
         </div>
       </div>
     </div>

@@ -30,7 +30,7 @@ export default function ParentModal({
       setErrorMsg('');
     } else {
       soundManager.playTryAgain();
-      setErrorMsg('Mật khẩu không chính xác! (Mật khẩu mặc định: admin)');
+      setErrorMsg('Mật khẩu không chính xác! Vui lòng kiểm tra lại.');
     }
   };
 
@@ -139,7 +139,7 @@ export default function ParentModal({
                     setPasswordInput(e.target.value);
                     setErrorMsg('');
                   }}
-                  placeholder="Nhập mật khẩu (Mặc định: admin)"
+                  placeholder="Nhập mật khẩu quản lý..."
                   style={{
                     width: '100%',
                     padding: '0.75rem 2.8rem 0.75rem 1rem',
@@ -194,18 +194,6 @@ export default function ParentModal({
               >
                 🔓 Mở Khóa Quản Trị
               </button>
-
-              <div style={{
-                marginTop: '1rem',
-                fontSize: '0.8rem',
-                color: '#64748b',
-                background: '#eff6ff',
-                padding: '0.5rem 0.75rem',
-                borderRadius: '0.5rem',
-                border: '1px solid #bfdbfe'
-              }}>
-                🔑 Mật khẩu mặc định hệ thống: <strong style={{ color: '#2563eb' }}>admin</strong>
-              </div>
             </form>
           </div>
         ) : (
