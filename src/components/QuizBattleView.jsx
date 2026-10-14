@@ -38,6 +38,7 @@ export default function QuizBattleView({
 
   // Phân bố đáp án linh hoạt: xáo trộn các lựa chọn cho mỗi câu hỏi, không cố định một vị trí
   const [displayOptions, setDisplayOptions] = useState(() => shuffleOptions(currentLesson?.options));
+  const [sessionCorrectCount, setSessionCorrectCount] = useState(0);
 
   useEffect(() => {
     setCurrentIndex(stageIndex);
@@ -46,6 +47,7 @@ export default function QuizBattleView({
     setShowHint(false);
     setAttemptCount(0);
     setIsFinished(false);
+    setSessionCorrectCount(0);
     const currentLessons = LESSONS[subject.id] || [];
     setDisplayOptions(shuffleOptions(currentLessons[stageIndex]?.options));
   }, [stageIndex, subject.id]);
@@ -61,13 +63,15 @@ export default function QuizBattleView({
   };
 
   const handleSelectOption = (option) => {
-    if (isCorrect) return; // Đã đúng rồi thì đợi bấm câu tiếp
+    // Khi học sinh đã chọn một đáp án (dù đúng hay sai) thì khóa lại, không cho chọn lại nữa
+    if (selectedOption !== null) return;
 
     setSelectedOption(option);
 
     if (option === currentLesson.correctAnswer) {
       // ĐÚNG RỒI!
       setIsCorrect(true);
+      setSessionCorrectCount(prev => prev + 1);
       soundManager.playSuccess();
       soundManager.playCoin();
 
@@ -90,12 +94,12 @@ export default function QuizBattleView({
         attempts: attemptCount + 1
       });
     } else {
-      // CHƯA ĐÚNG -> KHÔNG TRỪ MÁU, TỰ ĐỘNG BẬT GỢI Ý (SCAFFOLD)
+      // CHƯA ĐÚNG -> KHÔNG ĐƯỢC CHỌN LẠI ĐÁP ÁN KHÁC NỮA
       setIsCorrect(false);
       setAttemptCount(prev => prev + 1);
       soundManager.playTryAgain();
 
-      // Bật ngay gợi ý trực quan để bé hiểu bài
+      // Khi chọn đáp án xong mà sai -> Tự động bật gợi ý để học sinh hiểu bài
       setShowHint(true);
 
       if (battleSceneRef.current?.castHintEffect) {
@@ -132,26 +136,27 @@ export default function QuizBattleView({
             Chúc Mừng Hiệp Sĩ Nhí!
           </h2>
           <p style={{ color: '#475569', fontSize: '1.15rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
-            Bé và bạn <strong>{pet.name}</strong> đã hoàn thành xuất sắc tất cả <strong>{lessons.length} ải thử thách</strong> tại <strong>{subject.name}</strong>!
+            Bé và bạn <strong>{pet.name}</strong> đã hoàn thành chặng thử thách tại <strong>{subject.name}</strong>!
           </p>
           <div style={{
             display: 'flex',
             justifyContent: 'center',
             gap: '1rem',
-            marginBottom: '2rem'
+            marginBottom: '2rem',
+            flexWrap: 'wrap'
           }}>
             <div style={{ background: '#fef3c7', padding: '0.75rem 1.5rem', borderRadius: '1rem', border: '2px solid #fde68a' }}>
-              <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#b45309', fontFamily: 'var(--font-display)' }}>
-                ⭐ +{lessons.length} Sao Tri Thức
+              <span style={{ fontSize: '1.2rem', fontWeight: 800, color: '#b45309', fontFamily: 'var(--font-display)' }}>
+                ⭐ Đúng {sessionCorrectCount}/{lessons.length} Ải
               </span>
             </div>
             <div style={{ background: '#ecfdf5', padding: '0.75rem 1.5rem', borderRadius: '1rem', border: '2px solid #a7f3d0' }}>
-              <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#047857', fontFamily: 'var(--font-display)' }}>
-                🪙 +{lessons.length * 10} Xu Vàng
+              <span style={{ fontSize: '1.2rem', fontWeight: 800, color: '#047857', fontFamily: 'var(--font-display)' }}>
+                🪙 +{sessionCorrectCount * 15} Xu Vàng
               </span>
             </div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
             <button
               onClick={() => {
                 soundManager.playClick();
@@ -397,80 +402,157 @@ export default function QuizBattleView({
             marginBottom: '1.25rem'
           }}>
             {displayOptions.map((option, idx) => {
+              const isSelected = selectedOption === option;
+              const isTheCorrectAnswer = option === currentLesson.correctAnswer;
+
               let statusClass = '';
-              if (selectedOption === option) {
-                statusClass = isCorrect ? 'correct' : 'wrong';
-              } else if (isCorrect && option === currentLesson.correctAnswer) {
-                statusClass = 'correct';
+              if (selectedOption !== null) {
+                if (isSelected) {
+                  statusClass = isCorrect ? 'correct' : 'wrong';
+                } else if (isTheCorrectAnswer) {
+                  // Khi học sinh chọn sai, hiện đáp án đúng để học sinh biết kết quả chính xác
+                  statusClass = 'correct';
+                }
               }
 
               return (
                 <button
                   key={`${currentLesson.id}-${idx}-${option}`}
                   id={`opt-${idx}`}
+                  disabled={selectedOption !== null}
                   onClick={() => handleSelectOption(option)}
                   className={`option-card ${statusClass}`}
+                  style={{
+                    opacity: selectedOption !== null && !isSelected && !isTheCorrectAnswer ? 0.55 : 1
+                  }}
                 >
                   <span>{option}</span>
+                  {selectedOption !== null && isSelected && isCorrect && (
+                    <span style={{ fontSize: '1.2rem' }}>✅</span>
+                  )}
+                  {selectedOption !== null && isSelected && !isCorrect && (
+                    <span style={{ fontSize: '1.2rem' }}>❌</span>
+                  )}
+                  {selectedOption !== null && !isSelected && isTheCorrectAnswer && (
+                    <span style={{
+                      fontSize: '0.82rem',
+                      fontWeight: 800,
+                      color: '#047857',
+                      background: '#d1fae5',
+                      padding: '2px 8px',
+                      borderRadius: '6px'
+                    }}>
+                      Đáp án đúng ✔
+                    </span>
+                  )}
                 </button>
               );
             })}
           </div>
 
-          {/* Scaffold Hint Section (Gợi ý từng bước không phạt) */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
-            <button
-              onClick={() => {
-                soundManager.playHint();
-                setShowHint(!showHint);
-              }}
-              style={{
-                display: 'inline-flex',
+          {/* Phản hồi & Chức năng Gợi ý: CHỈ HIỆN LÊN KHI HỌC SINH ĐÃ CHỌN ĐÁP ÁN XONG */}
+          {selectedOption !== null && (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.75rem',
+              marginTop: '0.5rem'
+            }}>
+              {/* Thông báo kết quả thân thiện */}
+              <div style={{
+                padding: '0.85rem 1.15rem',
+                borderRadius: '1rem',
+                display: 'flex',
                 alignItems: 'center',
-                gap: '0.4rem',
-                background: '#fef3c7',
-                border: '2px solid #fde68a',
-                color: '#b45309',
-                borderRadius: '9999px',
-                padding: '0.45rem 1rem',
-                fontSize: '0.92rem',
+                gap: '0.65rem',
+                fontSize: '1rem',
                 fontWeight: 700,
-                cursor: 'pointer'
-              }}
-            >
-              <span>💡</span>
-              <span>{showHint ? 'Ẩn Gợi Ý' : 'Bé Muốn Gợi Ý?'}</span>
-            </button>
+                backgroundColor: isCorrect ? '#ecfdf5' : '#fff1f2',
+                border: `2px solid ${isCorrect ? '#a7f3d0' : '#fecdd3'}`,
+                color: isCorrect ? '#065f46' : '#9f1239'
+              }}>
+                <span style={{ fontSize: '1.35rem' }}>{isCorrect ? '🎉' : '💡'}</span>
+                <div style={{ flex: 1 }}>
+                  {isCorrect ? (
+                    <span>Chính xác tuyệt đối! Bé làm rất giỏi!</span>
+                  ) : (
+                    <span>Tiếc quá, chưa chính xác rồi! Bé hãy xem gợi ý bên dưới để hiểu bài nhé.</span>
+                  )}
+                </div>
+              </div>
 
-            {isCorrect && (
-              <button
-                id="btn-next-question"
-                onClick={handleNextQuestion}
-                className="btn-arcade btn-arcade-emerald"
-                style={{ fontSize: '1.1rem', padding: '0.65rem 1.75rem' }}
-              >
-                <span>{currentIndex + 1 < lessons.length ? 'Ải Tiếp Theo ➔' : 'Nhận Thưởng 🏆'}</span>
-              </button>
-            )}
-          </div>
+              {/* Hàng nút tương tác: Nút Gợi ý (chỉ hiện khi đã chọn đáp án xong) & Nút Sang ải tiếp theo */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '0.75rem'
+              }}>
+                {currentLesson.scaffoldHint ? (
+                  <button
+                    id="btn-toggle-hint"
+                    onClick={() => {
+                      soundManager.playHint();
+                      setShowHint(!showHint);
+                    }}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.45rem',
+                      background: showHint ? '#fef3c7' : '#fffbeb',
+                      border: '2px solid #fde68a',
+                      color: '#b45309',
+                      borderRadius: '9999px',
+                      padding: '0.5rem 1.15rem',
+                      fontSize: '0.95rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    <span>💡</span>
+                    <span>{showHint ? 'Ẩn Gợi Ý' : 'Xem Gợi Ý Chi Tiết'}</span>
+                  </button>
+                ) : <div />}
 
-          {/* Hint Card Box */}
-          {showHint && (
+                <button
+                  id="btn-next-question"
+                  onClick={handleNextQuestion}
+                  className={`btn-arcade ${isCorrect ? 'btn-arcade-emerald' : 'btn-arcade-primary'}`}
+                  style={{
+                    fontSize: '1.05rem',
+                    padding: '0.65rem 1.75rem',
+                    marginLeft: 'auto'
+                  }}
+                >
+                  <span>
+                    {currentIndex + 1 < lessons.length
+                      ? 'Ải Tiếp Theo ➔'
+                      : (isCorrect ? 'Nhận Thưởng 🏆' : 'Xem Kết Quả 🏁')}
+                  </span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Hint Card Box - Chỉ hiện khi showHint = true VÀ selectedOption !== null */}
+          {selectedOption !== null && showHint && currentLesson.scaffoldHint && (
             <div style={{
               marginTop: '1rem',
-              padding: '1rem 1.25rem',
+              padding: '1.1rem 1.35rem',
               backgroundColor: '#fffbeb',
               border: '2px dashed #f59e0b',
               borderRadius: '1rem',
               animation: 'correctBounce 0.3s ease'
             }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
-                <span style={{ fontSize: '1.5rem' }}>🧙‍♂️</span>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.65rem' }}>
+                <span style={{ fontSize: '1.65rem' }}>🧙‍♂️</span>
                 <div>
-                  <h4 style={{ fontFamily: 'var(--font-display)', color: '#92400e', fontWeight: 800, fontSize: '1rem' }}>
+                  <h4 style={{ fontFamily: 'var(--font-display)', color: '#92400e', fontWeight: 800, fontSize: '1.05rem', marginBottom: '0.25rem' }}>
                     Phù Thủy Tri Thức Mách Nước:
                   </h4>
-                  <p style={{ color: '#78350f', fontSize: '0.95rem', lineHeight: 1.4, marginTop: '2px' }}>
+                  <p style={{ color: '#78350f', fontSize: '0.98rem', lineHeight: 1.5, margin: 0 }}>
                     {currentLesson.scaffoldHint}
                   </p>
                 </div>
@@ -479,16 +561,16 @@ export default function QuizBattleView({
           )}
 
           {/* Fun Fact when correct */}
-          {isCorrect && currentLesson.funFact && (
+          {selectedOption !== null && isCorrect && currentLesson.funFact && (
             <div style={{
               marginTop: '1rem',
-              padding: '0.85rem 1rem',
+              padding: '0.85rem 1.1rem',
               backgroundColor: '#ecfdf5',
               border: '1px solid #a7f3d0',
               borderRadius: '1rem',
               color: '#065f46',
-              fontSize: '0.9rem',
-              lineHeight: 1.4
+              fontSize: '0.92rem',
+              lineHeight: 1.45
             }}>
               🌟 <strong>Kiến thức thú vị:</strong> {currentLesson.funFact}
             </div>

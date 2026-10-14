@@ -182,16 +182,20 @@ h1, h2, h3, h4, .font-display {
   min-height: 64px;
 }
 
-.option-card:hover {
+.option-card:hover:not(:disabled) {
   border-color: #6366f1;
   background: #f5f3ff;
   transform: translateY(-2px);
   box-shadow: 0 6px 0 #818cf8;
 }
 
-.option-card:active {
+.option-card:active:not(:disabled) {
   transform: translateY(2px);
   box-shadow: 0 2px 0 #818cf8;
+}
+
+.option-card:disabled {
+  cursor: default;
 }
 
 .option-card.correct {
