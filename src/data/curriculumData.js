@@ -1,7 +1,17 @@
 // Ngân hàng câu đố học tập GDPT 2018 Toàn Diện (Tiểu Học Lớp 1 - 5)
-// Mức 1 (Lớp 1 - 2): 4 Hòn Đảo Khởi Động (122 Ải)
-// Mức 2 (Lớp 3 - 4 - 5): 5 Hòn Đảo Chinh Phục (150 Ải Nâng Cao)
-// Tổng cộng: 9 Hòn Đảo & 272 Ải thử thách trí tuệ
+// Mức 1 (Lớp 1 - 2): 8 Hòn Đảo Tri Thức (162 Ải)
+// Mức 2 (Lớp 3 - 4 - 5): 9 Hòn Đảo Chinh Phục (190 Ải Nâng Cao)
+// Tổng cộng: 17 Hòn Đảo & 352 Ải thử thách trí tuệ bám sát toàn diện SGK GDPT 2018
+import {
+  ethicsLessons,
+  informaticsTechLessons,
+  artsMusicLessons,
+  lifeSkillsLessons,
+  informaticsAdvLessons,
+  technologyAdvLessons,
+  ethicsAdvLessons,
+  artsMusicAdvLessons
+} from './additionalCurriculumData';
 
 export const GRADE_LEVELS = [
   {
@@ -10,7 +20,7 @@ export const GRADE_LEVELS = [
     shortName: 'Lớp 1 - 2',
     badge: '🌱 Khởi Động',
     title: 'Vương Quốc Khởi Động (Lớp 1 - 2)',
-    description: 'Kiến thức nền tảng: nhận diện âm vần, phép tính phạm vi 20, tiếng Anh khởi động và thế giới xung quanh.',
+    description: 'Kiến thức toàn diện chuẩn GDPT 2018: Toán, Tiếng Việt, Tiếng Anh, TN&XH, Đạo đức, Tin học - Công nghệ, Âm nhạc - Mĩ thuật và Kỹ năng sinh tồn.',
     color: '#10b981',
     accentColor: '#10b981',
     bgBadge: '#ecfdf5',
@@ -22,7 +32,7 @@ export const GRADE_LEVELS = [
     shortName: 'Lớp 3 - 4 - 5',
     badge: '🚀 Chinh Phục',
     title: 'Vương Quốc Khám Phá (Lớp 3 - 4 - 5)',
-    description: 'Tư duy logic nâng cao: phân số, số thập phân, tu từ & ngữ pháp mở rộng, khoa học đời sống và sử ký non sông Việt Nam.',
+    description: 'Tư duy chuyên sâu chuẩn GDPT 2018: Toán nâng cao, Tiếng Việt mở rộng, Tiếng Anh giao tiếp, Khoa học, Lịch sử - Địa lí, Tin học lập trình, Công nghệ sáng chế, Đạo đức công dân và Nghệ thuật.',
     color: '#6366f1',
     accentColor: '#4f46e5',
     bgBadge: '#ede9fe',
@@ -67,13 +77,57 @@ export const SUBJECTS_LEVEL1 = [
   {
     id: 'science',
     levelId: 'level1',
-    name: 'Xứ Sở Khoa Học',
+    name: 'Xứ Sở Khoa Học (TN&XH)',
     grade: 'Lớp 1 - 2',
     icon: '🌱',
     color: 'from-purple-400 to-indigo-600',
     accentColor: '#8b5cf6',
     description: 'Khám phá cơ thể, động thực vật, thời tiết, vòng đời sinh vật và bảo vệ môi trường.',
     bannerEmoji: '🔬'
+  },
+  {
+    id: 'ethics',
+    levelId: 'level1',
+    name: 'Vườn Ươm Đạo Đức & Kỹ Năng',
+    grade: 'Lớp 1 - 2',
+    icon: '💖',
+    color: 'from-pink-400 to-rose-600',
+    accentColor: '#e11d48',
+    description: 'Lời chào lễ phép, cảm ơn xin lỗi, hiếu thảo cha mẹ, thật thà và an toàn giao thông.',
+    bannerEmoji: '🌸'
+  },
+  {
+    id: 'informatics_tech',
+    levelId: 'level1',
+    name: 'Đảo Tin Học & Công Nghệ Nhí',
+    grade: 'Lớp 1 - 2',
+    icon: '💻',
+    color: 'from-cyan-400 to-blue-600',
+    accentColor: '#0284c7',
+    description: 'Làm quen máy tính, chuột và bàn phím, an toàn điện gia đình và tư duy thuật toán hình ảnh.',
+    bannerEmoji: '🤖'
+  },
+  {
+    id: 'arts_music',
+    levelId: 'level1',
+    name: 'Ốc Đảo Âm Nhạc & Sắc Màu',
+    grade: 'Lớp 1 - 2',
+    icon: '🎨',
+    color: 'from-amber-400 to-yellow-600',
+    accentColor: '#d97706',
+    description: 'Bảy nốt nhạc diệu kỳ, nhạc cụ gõ, màu sắc cơ bản, pha màu thần tiên và hình khối mĩ thuật.',
+    bannerEmoji: '🎶'
+  },
+  {
+    id: 'life_skills',
+    levelId: 'level1',
+    name: 'Thung Lũng Kỹ Năng Sinh Tồn',
+    grade: 'Lớp 1 - 2',
+    icon: '🛡️',
+    color: 'from-teal-400 to-emerald-600',
+    accentColor: '#0d9488',
+    description: 'Rửa tay 6 bước, số cứu hộ 113-114-115, quy tắc 5 ngón tay, thoát hiểm khói lửa và phòng đuối nước.',
+    bannerEmoji: '🏕️'
   }
 ];
 
@@ -132,6 +186,50 @@ export const SUBJECTS_LEVEL2 = [
     accentColor: '#e11d48',
     description: 'Địa lý các vùng miền, biển đảo thiêng liêng và các mốc son lịch sử hào hùng dựng nước giữ nước.',
     bannerEmoji: '🚩'
+  },
+  {
+    id: 'informatics_adv',
+    levelId: 'level2',
+    name: 'Thành Phố Tin Học & Thuật Toán',
+    grade: 'Lớp 3 - 4 - 5',
+    icon: '💾',
+    color: 'from-blue-500 to-indigo-700',
+    accentColor: '#3b82f6',
+    description: 'Thông tin dữ liệu, mạng Internet an toàn, sơ đồ tư duy, cấu trúc lặp và lập trình khối Scratch.',
+    bannerEmoji: '🖥️'
+  },
+  {
+    id: 'technology_adv',
+    levelId: 'level2',
+    name: 'Thung Lũng Sáng Chế & Công Nghệ',
+    grade: 'Lớp 3 - 4 - 5',
+    icon: '⚙️',
+    color: 'from-orange-500 to-amber-700',
+    accentColor: '#d97706',
+    description: 'Đèn học bảo vệ mắt, cơ cấu truyền động xích đai, mạch điện cơ bản, năng lượng sạch và lắp ráp cơ khí.',
+    bannerEmoji: '🔧'
+  },
+  {
+    id: 'ethics_adv',
+    levelId: 'level2',
+    name: 'Vương Quốc Đạo Đức & Công Dân',
+    grade: 'Lớp 3 - 4 - 5',
+    icon: '🕊️',
+    color: 'from-fuchsia-500 to-pink-700',
+    accentColor: '#c026d3',
+    description: 'Tôn trọng sự khác biệt, giữ chữ tín, phòng chống bạo lực học đường, quyền trẻ em và bảo vệ Trái Đất.',
+    bannerEmoji: '🏛️'
+  },
+  {
+    id: 'arts_music_adv',
+    levelId: 'level2',
+    name: 'Cung Điện Âm Nhạc & Mĩ Thuật',
+    grade: 'Lớp 3 - 4 - 5',
+    icon: '🎻',
+    color: 'from-violet-500 to-purple-800',
+    accentColor: '#8b5cf6',
+    description: 'Khuông nhạc khóa Sol, trường độ nốt, dân ca 3 miền, tranh dân gian Đông Hồ và luật phối cảnh xa gần.',
+    bannerEmoji: '🎭'
   }
 ];
 
@@ -2144,9 +2242,17 @@ export const LESSONS = {
   vietnamese: vietnameseLessons,
   english: englishLessons,
   science: scienceLessons,
+  ethics: ethicsLessons,
+  informatics_tech: informaticsTechLessons,
+  arts_music: artsMusicLessons,
+  life_skills: lifeSkillsLessons,
   math_adv: mathAdvLessons,
   vietnamese_adv: vietnameseAdvLessons,
   english_adv: englishAdvLessons,
   science_adv: scienceAdvLessons,
-  history_geo: historyGeoLessons
+  history_geo: historyGeoLessons,
+  informatics_adv: informaticsAdvLessons,
+  technology_adv: technologyAdvLessons,
+  ethics_adv: ethicsAdvLessons,
+  arts_music_adv: artsMusicAdvLessons
 };
